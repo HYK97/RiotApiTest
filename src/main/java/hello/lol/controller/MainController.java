@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Objects;
 
 @Validated
@@ -55,5 +56,25 @@ public class MainController {
                 .bodyToMono(String.class);
         System.out.println(stringMono.flux().toStream().findFirst());*/
     }
+
+
+    @GetMapping("/matchHistory/{name}")
+    public void matchHistorySearch(@PathVariable @Length(min = 1, max = 17, message = "1이하 17이상으로 작성하세요") String name) {
+        SummonerDto userInfo = summonerService.findUserInfo(name);
+
+        URI uri = UriComponentsBuilder
+                .fromUriString("https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/")
+                .path(userInfo.getPuuid()+"/ids")
+                .queryParam("start", 0)
+                .queryParam("count", 20)
+                .queryParam("api_key", apikey)
+                .encode()
+                .build()
+                .toUri();
+        RestTemplate restTemplate = new RestTemplate();
+        List<String> forObject = restTemplate.getForObject(uri, List.class);
+
+    }
+
 
 }

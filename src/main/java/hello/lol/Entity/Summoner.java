@@ -1,5 +1,6 @@
 package hello.lol.Entity;
 
+import hello.lol.dto.SummonerDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -25,5 +26,18 @@ public class Summoner {
     private int profileIconId;
     private String revisionDate;
     private int summonerLevel;
+
+    public SummonerDto toDto() {
+        return SummonerDto.builder()
+                .accountId(accountId)
+                .id(id)
+                .summonerLevel(summonerLevel)
+                .name(name)
+                .puuid(puuid)
+                .profileIconId(profileIconId)
+                .revisionDate(revisionDate)
+                .no(no)
+                .build();
+    }
 
 }
